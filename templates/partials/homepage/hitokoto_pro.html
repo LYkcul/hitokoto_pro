@@ -1,0 +1,199 @@
+<style>
+  .zhiyin-rqyy-demo {
+    width: 100%;
+    height: 180px;
+    position: relative;
+  }
+
+  .zhiyin-rqyy-item {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    color: white;
+    text-align: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    cursor: pointer;
+    background-image: url(https://www.itzhiyin.cn/rqyy-bg-5.png);
+  }
+
+  .zhiyin-rqyy-date {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .zhiyin-rqyy-day {
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+
+  .zhiyin-rqyy-month {
+    font-weight: 700;
+    font-size: 2rem;
+  }
+
+  .zhiyin-rqyy-month::before {
+    content: "/";
+    padding-right: 2px;
+  }
+
+  .zhiyin-rqyy-text {
+    position: absolute;
+    width: 90%;
+    height: auto;
+    line-height: 30px;
+    font-family: "宋体";
+    font-size: 1.5rem;
+    font-weight: 700;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .itzhiyin-rqyy-yy::after {
+    display: inline-block;
+    content: "_";
+    animation: fadeInHX 1s;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes fadeInHX {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .zhiyin-rqyy-btn {
+    display: inline-block;
+    font-family: "新宋体";
+    font-weight: 700;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 10px;
+  }
+
+  #zhiyin-yybtn {
+    width: 100%;
+    position: relative;
+  }
+
+  #zhiyin-yybtn:hover {
+    color: #e99896;
+  }
+
+  #zhiyin-yybtn:hover > .zhiyin-rqyy-msg {
+    visibility: unset;
+  }
+
+  .zhiyin-rqyy-icon {
+    font-size: 18px;
+  }
+
+  .zhiyin-rqyy-msg {
+    visibility: hidden;
+    font-size: 10px;
+    color: #9784a0;
+    position: absolute;
+    padding: 5px;
+    top: -5px;
+    left: -60px;
+    border-radius: 2px;
+    background: white;
+    transition: all 0.2s;
+  }
+
+  .zhiyin-rqyy-msg::after {
+    content: " ";
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    background: white;
+    position: absolute;
+    top: 10px;
+    transform: rotate(45deg);
+    border-radius: 2px;
+  }
+</style>
+
+<head>
+  <link rel="icon-a-shuaxin2" href="refresh.ico">
+</head>
+
+<div class="section side nojs--hide">
+  <div class="zhiyin-rqyy-demo">
+    <div class="zhiyin-rqyy-item">
+      <div class="zhiyin-rqyy-date">
+        <span class="zhiyin-rqyy-day">-</span>
+        <span class="zhiyin-rqyy-month">-</span>
+      </div>
+      <div class="zhiyin-rqyy-text">
+        <span class="itzhiyin-rqyy-yy">加载中...</span>
+      </div>
+      <div class="zhiyin-rqyy-btn">
+        <div id="zhiyin-yybtn">
+          <span class="zhiyin-rqyy-msg">换一句</span>
+          <i class="icon-a-shuaxin2" aria-hidden="true"></i>
+        </div>
+      </div>
+  </div>
+  </div>
+  </div>
+  
+<script>
+  $(function () {
+    var myDate = new Date();
+    var mon = myDate.getMonth() + 1;
+    var day = myDate.getDate();
+    var newMon = mon < 10 ? "0" + mon : mon;
+    var newDay = day < 10 ? "0" + day : day;
+    var rqyyLock = true;
+    var randRYY = parseInt(Math.random() * 10);
+    $(".zhiyin-rqyy-item").css(
+      "background-image",
+      "url(https://www.itzhiyin.cn/rqyy-imgs/rqyy-bg-" + randRYY + ".png)"
+    );
+    $(".zhiyin-rqyy-day").html(newDay);
+    $(".zhiyin-rqyy-month").html(newMon);
+    $.extend({
+      yyAjax: function () {
+        $.ajax({
+          // 链接
+          url: "https://api.btstu.cn/yan/api.php?charset=utf-8&encode=json",
+          // 请求方法
+          type: "GET",
+          // 成功返回
+          dataType: "json",
+          success: function (e) {
+            rqyyLock = false;
+            var yiyanList = e.text.split("");
+            var newYY = "";
+            var yyIndex = 0;
+            var timer = setInterval(function () {
+              newYY += yiyanList[yyIndex];
+              yyIndex++;
+              if (yyIndex >= yiyanList.length) {
+                clearInterval(timer);
+                rqyyLock = true;
+              }
+              $(".itzhiyin-rqyy-yy").html(newYY);
+            }, 150);
+          }
+        });
+      }
+    });
+    $.yyAjax();
+    $("#zhiyin-yybtn").click(function () {
+      if (!rqyyLock) return;
+      $.yyAjax();
+    });
+  });
+  $(".zhiyin-rqyy-demo").parent().parent().css({
+    padding: "0",
+    overflow: "hidden"
+  });
+</script>
