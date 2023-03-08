@@ -128,8 +128,8 @@
   <div class="zhiyin-rqyy-demo">
     <div class="zhiyin-rqyy-item">
       <div class="zhiyin-rqyy-date">
-        <span class="zhiyin-rqyy-month">-</span>
         <span class="zhiyin-rqyy-day">-</span>
+        <span class="zhiyin-rqyy-month">-</span>
       </div>
       <div class="zhiyin-rqyy-text">
         <span class="itzhiyin-rqyy-yy">加载中...</span>
@@ -157,8 +157,10 @@
       "background-image",
       "url(https://www.itzhiyin.cn/rqyy-imgs/rqyy-bg-" + randRYY + ".png)"
     );
-    $(".zhiyin-rqyy-day").html(newDay);
-    $(".zhiyin-rqyy-month").html(newMon);
+    //$(".zhiyin-rqyy-day").html(newDay);
+    //$(".zhiyin-rqyy-month").html(newMon);
+  $(".zhiyin-rqyy-day").html(newMon);
+    $(".zhiyin-rqyy-month").html(newDay);
     $.extend({
       yyAjax: function () {
         $.ajax({
